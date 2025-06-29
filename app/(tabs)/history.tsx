@@ -30,7 +30,7 @@ export default function HistoryScreen() {
 
   const loadSearchHistory = async () => {
     try {
-      const saved = await AsyncStorage.getItem('searchHistory');
+      const saved = await AsyncStorage.getItem('recentSearches');
       if (saved) {
         setSearchHistory(JSON.parse(saved));
       }
@@ -50,7 +50,7 @@ export default function HistoryScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await AsyncStorage.removeItem('searchHistory');
+              await AsyncStorage.removeItem('recentSearches');
               setSearchHistory([]);
             } catch (error) {
               console.error('Error clearing history:', error);
@@ -74,7 +74,7 @@ export default function HistoryScreen() {
             try {
               const updated = searchHistory.filter(item => item.id !== id);
               setSearchHistory(updated);
-              await AsyncStorage.setItem('searchHistory', JSON.stringify(updated));
+              await AsyncStorage.setItem('recentSearches', JSON.stringify(updated));
             } catch (error) {
               console.error('Error deleting history item:', error);
             }
