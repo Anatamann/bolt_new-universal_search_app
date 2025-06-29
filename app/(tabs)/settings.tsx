@@ -125,6 +125,8 @@ export default function SettingsScreen() {
     try {
       await AsyncStorage.setItem('searchEndpoints', JSON.stringify(updatedEndpoints));
       setEndpoints(updatedEndpoints);
+      // Force reload from storage to ensure UI consistency
+      await loadSettings();
     } catch (error) {
       console.error('Error saving settings:', error);
     }
