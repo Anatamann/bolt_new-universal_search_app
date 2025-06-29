@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -107,10 +108,12 @@ export default function SearchScreen() {
 
   const isDark = colorScheme === 'dark';
 
-  useEffect(() => {
-    loadSettings();
-    loadRecentSearches();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadSettings();
+      loadRecentSearches();
+    }, [])
+  );
 
   const loadSettings = async () => {
     try {
