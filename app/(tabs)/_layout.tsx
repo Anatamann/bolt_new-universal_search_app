@@ -1,17 +1,48 @@
 import { Tabs } from 'expo-router';
 import { Search, Settings, History, Bookmark } from 'lucide-react-native';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View, Image, TouchableOpacity, Linking } from 'react-native';
+import { BottomTabBar } from '@react-navigation/bottom-tabs';
+
+const logo = require('../../assets/images/logotext_poweredby_360w.png');
+
+const CustomTabBar = (props) => {
+  const colorScheme = useColorScheme();
+  return (
+    <View
+      style={{
+        backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#ffffff',
+        borderTopColor: colorScheme === 'dark' ? '#333333' : '#e5e5e5',
+        borderTopWidth: 1,
+      }}
+    >
+      <BottomTabBar {...props} />
+      <View style={{ paddingBottom: 25, paddingTop: 10 }}>
+        <TouchableOpacity onPress={() => Linking.openURL('https://bolt.new/')}>
+          <Image
+            source={logo}
+            style={{
+              width: 180,
+              height: 25,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  
+
   const tabBarStyle = {
-    backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#ffffff',
-    borderTopColor: colorScheme === 'dark' ? '#333333' : '#e5e5e5',
-    borderTopWidth: 1,
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
     paddingBottom: 8,
     paddingTop: 8,
     height: 70,
+    elevation: 0,
   };
 
   const tabBarActiveTintColor = colorScheme === 'dark' ? '#60a5fa' : '#3b82f6';
@@ -19,6 +50,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
         tabBarStyle,
@@ -29,7 +61,8 @@ export default function TabLayout() {
           fontWeight: '500',
           marginTop: 4,
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{

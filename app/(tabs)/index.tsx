@@ -169,7 +169,7 @@ export default function SearchScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Universal Search</Text>
+          <Text style={styles.title}>Ekagra Search</Text>
           <Text style={styles.subtitle}>Search across your favorite platforms</Text>
         </View>
 
