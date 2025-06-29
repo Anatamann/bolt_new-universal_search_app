@@ -10,7 +10,7 @@ import {
   TextInput,
   Linking,
 } from 'react-native';
-import { Star, Plus, Trash2, Edit3, Save, X, ExternalLink } from 'lucide-react-native';
+import { Star, Plus, Trash2, CreditCard as Edit3, Save, X, ExternalLink } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface SearchEndpoint {
