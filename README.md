@@ -86,40 +86,10 @@ Think of it as your **personal search command center** - one search bar that can
 
 To download and run the production build:
 
-#### Option 1: Direct Download
-1. Go to the [Releases](https://github.com/yourusername/universal-search-app/releases) section
+#### Direct Download
+1. Go to the [Releases](https://github.com/Anatamann/bolt_new-universal_search_app/releases) section
 2. Download the latest release for your platform:
-   - **Web**: `universal-search-web.zip`
-   - **Android**: `universal-search.apk` (if available)
-   - **iOS**: Available through TestFlight (if configured)
-
-#### Option 2: Build from Source
-```bash
-# Clone and install
-git clone https://github.com/yourusername/universal-search-app.git
-cd universal-search-app
-npm install
-
-# Build for web
-npm run build:web
-
-# The built files will be in the 'dist' directory
-# Serve them using any static file server
-npx serve dist
-```
-
-#### Option 3: Expo Development Build
-```bash
-# Install Expo CLI globally
-npm install -g @expo/cli
-
-# Create a development build
-expo install --fix
-expo run:web
-
-# For mobile platforms (requires Expo Dev Client)
-expo run:android  # or expo run:ios
-```
+   - **Android**: [ekagra_search.apk](https://github.com/Anatamann/bolt_new-universal_search_app/releases/download/v1.0.0/ekagra_search.apk)
 
 ## 🛠️ Technology Stack
 
@@ -245,7 +215,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 
-1. Check the [Issues](https://github.com/yourusername/universal-search-app/issues) section
+1. Check the [Issues](https://github.com/Anatamann/universal-search-app/issues) section
 2. Create a new issue with detailed information
 3. For hackathon-related questions, refer to Bolt.new documentation
 
@@ -263,11 +233,13 @@ This project represents a paradigm shift in software development, demonstrating 
 **This is the future of software creation** - conversational, immediate, and extraordinarily powerful.
 
 ---
+## Important: Some of the features like search history save is not functioning right now, which will be corrected on the successive builds.
+---
 
 <div align="center">
 
 **Built with ❤️ using [Bolt.new](https://bolt.new) - The AI-Powered Development Platform**
 
-[🌐 Live Demo](https://your-demo-url.com) | [📱 Download](https://github.com/yourusername/universal-search-app/releases) | [📖 Documentation](./docs/)
+[📱 Download](https://github.com/Anatamann/bolt_new-universal_search_app/releases/download/v1.0.0/ekagra_search.apk) | [📖 Documentation](./docs/)
 
 </div>
