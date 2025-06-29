@@ -22,6 +22,14 @@ interface SearchEndpoint {
   color: string;
 }
 
+interface SearchHistoryItem {
+  id: string;
+  query: string;
+  endpoint: string;
+  timestamp: number;
+  url: string;
+}
+
 const defaultEndpoints: SearchEndpoint[] = [
   {
     id: 'google',
@@ -95,7 +103,7 @@ export default function SearchScreen() {
   const [selectedEndpoint, setSelectedEndpoint] = useState<SearchEndpoint>(defaultEndpoints[0]);
   const [showEndpoints, setShowEndpoints] = useState(false);
   const [endpoints, setEndpoints] = useState<SearchEndpoint[]>(defaultEndpoints);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [recentSearches, setRecentSearches] = useState<SearchHistoryItem[]>([]);
 
   const isDark = colorScheme === 'dark';
 
@@ -124,7 +132,22 @@ export default function SearchScreen() {
     try {
       const saved = await AsyncStorage.getItem('recentSearches');
       if (saved) {
-        setRecentSearches(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        // Handle legacy string array format
+        if (parsed.length > 0 && typeof parsed[0] === 'string') {
+          // Convert old format to new format
+          const converted = parsed.map((query: string, index: number) => ({
+            id: `legacy-${index}-${Date.now()}`,
+            query,
+            endpoint: 'Google',
+            timestamp: Date.now() - (index * 1000),
+            url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+          }));
+          setRecentSearches(converted);
+          await AsyncStorage.setItem('recentSearches', JSON.stringify(converted));
+        } else {
+          setRecentSearches(parsed);
+        }
       }
     } catch (error) {
       console.error('Error loading recent searches:', error);
@@ -133,7 +156,16 @@ export default function SearchScreen() {
 
   const saveRecentSearch = async (query: string) => {
     try {
-      const updated = [query, ...recentSearches.filter(s => s !== query)].slice(0, 10);
+      const searchUrl = selectedEndpoint.url + encodeURIComponent(query);
+      const newHistoryItem: SearchHistoryItem = {
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        query,
+        endpoint: selectedEndpoint.name,
+        timestamp: Date.now(),
+        url: searchUrl,
+      };
+      
+      const updated = [newHistoryItem, ...recentSearches.filter(s => s.query !== query)].slice(0, 10);
       setRecentSearches(updated);
       await AsyncStorage.setItem('recentSearches', JSON.stringify(updated));
     } catch (error) {
@@ -256,10 +288,10 @@ export default function SearchScreen() {
               <TouchableOpacity
                 key={index}
                 style={styles.recentItem}
-                onPress={() => setSearchQuery(search)}
+                onPress={() => setSearchQuery(search.query)}
               >
                 <Search size={16} color={isDark ? '#6b7280' : '#9ca3af'} />
-                <Text style={styles.recentText}>{search}</Text>
+                <Text style={styles.recentText}>{search.query}</Text>
               </TouchableOpacity>
             ))}
           </View>
