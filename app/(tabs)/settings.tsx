@@ -317,7 +317,7 @@ export default function SettingsScreen() {
           <View style={styles.infoCard}>
             <Globe size={24} color={isDark ? '#60a5fa' : '#3b82f6'} />
             <View style={styles.infoContent}>
-              <Text style={styles.infoTitle}>Universal Search</Text>
+              <Text style={styles.infoTitle}>Ekagra Search</Text>
               <Text style={styles.infoDescription}>
                 Search across multiple platforms from one unified interface. 
                 Customize your search endpoints and save your favorite searches.
