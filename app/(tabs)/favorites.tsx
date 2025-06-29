@@ -8,9 +8,20 @@ import {
   useColorScheme,
   Alert,
   TextInput,
+  Linking,
 } from 'react-native';
-import { Star, Plus, Trash2, ExternalLink, CreditCard as Edit3, Save, X } from 'lucide-react-native';
+import { Star, Plus, Trash2, Edit3, Save, X, ExternalLink } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface SearchEndpoint {
+  id: string;
+  name: string;
+  icon: string;
+  url: string;
+  enabled: boolean;
+  color: string;
+  isCustom?: boolean;
+}
 
 interface FavoriteSearch {
   id: string;
@@ -22,12 +33,80 @@ interface FavoriteSearch {
   icon: string;
 }
 
+const defaultEndpoints: SearchEndpoint[] = [
+  {
+    id: 'google',
+    name: 'Google',
+    icon: '🔍',
+    url: 'https://www.google.com/search?q=',
+    enabled: true,
+    color: '#4285f4',
+  },
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    icon: '📺',
+    url: 'https://www.youtube.com/results?search_query=',
+    enabled: true,
+    color: '#ff0000',
+  },
+  {
+    id: 'chatgpt',
+    name: 'ChatGPT',
+    icon: '🤖',
+    url: 'https://chat.openai.com/?q=',
+    enabled: true,
+    color: '#10a37f',
+  },
+  {
+    id: 'github',
+    name: 'GitHub',
+    icon: '💻',
+    url: 'https://github.com/search?q=',
+    enabled: true,
+    color: '#333333',
+  },
+  {
+    id: 'reddit',
+    name: 'Reddit',
+    icon: '🔴',
+    url: 'https://www.reddit.com/search/?q=',
+    enabled: true,
+    color: '#ff4500',
+  },
+  {
+    id: 'stackoverflow',
+    name: 'Stack Overflow',
+    icon: '📚',
+    url: 'https://stackoverflow.com/search?q=',
+    enabled: true,
+    color: '#f48024',
+  },
+  {
+    id: 'twitter',
+    name: 'X (Twitter)',
+    icon: '🐦',
+    url: 'https://twitter.com/search?q=',
+    enabled: true,
+    color: '#1da1f2',
+  },
+  {
+    id: 'wikipedia',
+    name: 'Wikipedia',
+    icon: '📖',
+    url: 'https://en.wikipedia.org/wiki/Special:Search?search=',
+    enabled: true,
+    color: '#000000',
+  },
+];
+
 export default function FavoritesScreen() {
   const colorScheme = useColorScheme();
   const [favorites, setFavorites] = useState<FavoriteSearch[]>([]);
-  const [isAdding, setIsAdding] = useState(false);
+  const [endpoints, setEndpoints] = useState<SearchEndpoint[]>(defaultEndpoints);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [newFavorite, setNewFavorite] = useState({
+  const [formData, setFormData] = useState({
     name: '',
     query: '',
     endpoint: 'Google',
@@ -37,9 +116,11 @@ export default function FavoritesScreen() {
   });
 
   const isDark = colorScheme === 'dark';
+  const isEditing = editingId !== null;
 
   useEffect(() => {
     loadFavorites();
+    loadEndpoints();
   }, []);
 
   const loadFavorites = async () => {
@@ -53,6 +134,17 @@ export default function FavoritesScreen() {
     }
   };
 
+  const loadEndpoints = async () => {
+    try {
+      const saved = await AsyncStorage.getItem('searchEndpoints');
+      if (saved) {
+        setEndpoints(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Error loading endpoints:', error);
+    }
+  };
+
   const saveFavorites = async (updatedFavorites: FavoriteSearch[]) => {
     try {
       await AsyncStorage.setItem('favoriteSearches', JSON.stringify(updatedFavorites));
@@ -62,21 +154,10 @@ export default function FavoritesScreen() {
     }
   };
 
-  const addFavorite = async () => {
-    if (!newFavorite.name.trim() || !newFavorite.query.trim()) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
-
-    const favorite: FavoriteSearch = {
-      id: Date.now().toString(),
-      ...newFavorite,
-    };
-
-    const updated = [...favorites, favorite];
-    await saveFavorites(updated);
-    setIsAdding(false);
-    setNewFavorite({
+  const openForm = () => {
+    setIsFormOpen(true);
+    setEditingId(null);
+    setFormData({
       name: '',
       query: '',
       endpoint: 'Google',
@@ -84,6 +165,76 @@ export default function FavoritesScreen() {
       color: '#3b82f6',
       icon: '⭐',
     });
+  };
+
+  const openEditForm = (favorite: FavoriteSearch) => {
+    setIsFormOpen(true);
+    setEditingId(favorite.id);
+    setFormData({
+      name: favorite.name,
+      query: favorite.query,
+      endpoint: favorite.endpoint,
+      url: favorite.url,
+      color: favorite.color,
+      icon: favorite.icon,
+    });
+  };
+
+  const closeForm = () => {
+    setIsFormOpen(false);
+    setEditingId(null);
+    setFormData({
+      name: '',
+      query: '',
+      endpoint: 'Google',
+      url: 'https://www.google.com/search?q=',
+      color: '#3b82f6',
+      icon: '⭐',
+    });
+  };
+
+  const handleEndpointChange = (endpointName: string) => {
+    const endpoint = endpoints.find(ep => ep.name === endpointName);
+    if (endpoint) {
+      setFormData({
+        ...formData,
+        endpoint: endpoint.name,
+        url: endpoint.url,
+        color: endpoint.color,
+        icon: endpoint.icon,
+      });
+    }
+  };
+
+  const addFavorite = async () => {
+    if (!formData.name.trim() || !formData.query.trim()) {
+      Alert.alert('Error', 'Please fill in name and query fields');
+      return;
+    }
+
+    const favorite: FavoriteSearch = {
+      id: Date.now().toString(),
+      ...formData,
+    };
+
+    const updated = [...favorites, favorite];
+    await saveFavorites(updated);
+    closeForm();
+  };
+
+  const updateFavorite = async () => {
+    if (!formData.name.trim() || !formData.query.trim()) {
+      Alert.alert('Error', 'Please fill in name and query fields');
+      return;
+    }
+
+    const updated = favorites.map(fav => 
+      fav.id === editingId 
+        ? { ...fav, ...formData }
+        : fav
+    );
+    await saveFavorites(updated);
+    closeForm();
   };
 
   const deleteFavorite = (id: string) => {
@@ -107,12 +258,13 @@ export default function FavoritesScreen() {
   const executeSearch = async (favorite: FavoriteSearch) => {
     try {
       const searchUrl = favorite.url + encodeURIComponent(favorite.query);
-      // In a real app, this would open the URL
-      Alert.alert('Search', `Would open: ${searchUrl}`);
+      await Linking.openURL(searchUrl);
     } catch (error) {
-      Alert.alert('Error', 'Could not execute search');
+      Alert.alert('Error', 'Could not open the search URL');
     }
   };
+
+  const enabledEndpoints = endpoints.filter(ep => ep.enabled);
 
   const styles = createStyles(isDark);
 
@@ -122,19 +274,21 @@ export default function FavoritesScreen() {
         <Text style={styles.title}>Favorite Searches</Text>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => setIsAdding(true)}
+          onPress={openForm}
         >
           <Plus size={20} color="#ffffff" />
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Add New Favorite Form */}
-        {isAdding && (
+        {/* Add/Edit Favorite Form */}
+        {isFormOpen && (
           <View style={styles.addForm}>
             <View style={styles.formHeader}>
-              <Text style={styles.formTitle}>Add New Favorite</Text>
-              <TouchableOpacity onPress={() => setIsAdding(false)}>
+              <Text style={styles.formTitle}>
+                {isEditing ? 'Edit Favorite' : 'Add New Favorite'}
+              </Text>
+              <TouchableOpacity onPress={closeForm}>
                 <X size={20} color={isDark ? '#9ca3af' : '#6b7280'} />
               </TouchableOpacity>
             </View>
@@ -143,38 +297,85 @@ export default function FavoritesScreen() {
               style={styles.input}
               placeholder="Favorite name"
               placeholderTextColor={isDark ? '#6b7280' : '#9ca3af'}
-              value={newFavorite.name}
-              onChangeText={(text) => setNewFavorite({...newFavorite, name: text})}
+              value={formData.name}
+              onChangeText={(text) => setFormData({...formData, name: text})}
             />
             
             <TextInput
               style={styles.input}
               placeholder="Search query"
               placeholderTextColor={isDark ? '#6b7280' : '#9ca3af'}
-              value={newFavorite.query}
-              onChangeText={(text) => setNewFavorite({...newFavorite, query: text})}
+              value={formData.query}
+              onChangeText={(text) => setFormData({...formData, query: text})}
+            />
+
+            {/* Endpoint Selector */}
+            <Text style={styles.inputLabel}>Search Endpoint</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.endpointSelector}>
+              {enabledEndpoints.map((endpoint) => (
+                <TouchableOpacity
+                  key={endpoint.id}
+                  style={[
+                    styles.endpointOption,
+                    formData.endpoint === endpoint.name && styles.selectedEndpointOption
+                  ]}
+                  onPress={() => handleEndpointChange(endpoint.name)}
+                >
+                  <Text style={styles.endpointIcon}>{endpoint.icon}</Text>
+                  <Text style={[
+                    styles.endpointOptionText,
+                    formData.endpoint === endpoint.name && styles.selectedEndpointText
+                  ]}>
+                    {endpoint.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            {/* Custom URL Input */}
+            <TextInput
+              style={styles.input}
+              placeholder="Custom search URL (optional)"
+              placeholderTextColor={isDark ? '#6b7280' : '#9ca3af'}
+              value={formData.url}
+              onChangeText={(text) => setFormData({...formData, url: text})}
+            />
+            
+            <Text style={styles.helpText}>
+              💡 The URL should end with the search parameter (e.g., ?q= or ?search=)
+            </Text>
+
+            {/* Icon Input */}
+            <TextInput
+              style={styles.input}
+              placeholder="Icon (emoji)"
+              placeholderTextColor={isDark ? '#6b7280' : '#9ca3af'}
+              value={formData.icon}
+              onChangeText={(text) => setFormData({...formData, icon: text})}
             />
             
             <View style={styles.formActions}>
               <TouchableOpacity
                 style={styles.cancelButton}
-                onPress={() => setIsAdding(false)}
+                onPress={closeForm}
               >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.saveButton}
-                onPress={addFavorite}
+                onPress={isEditing ? updateFavorite : addFavorite}
               >
                 <Save size={16} color="#ffffff" />
-                <Text style={styles.saveButtonText}>Save</Text>
+                <Text style={styles.saveButtonText}>
+                  {isEditing ? 'Update' : 'Save'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         )}
 
         {/* Favorites List */}
-        {favorites.length === 0 && !isAdding ? (
+        {favorites.length === 0 && !isFormOpen ? (
           <View style={styles.emptyState}>
             <Star size={64} color={isDark ? '#4b5563' : '#d1d5db'} />
             <Text style={styles.emptyTitle}>No Favorite Searches</Text>
@@ -204,7 +405,7 @@ export default function FavoritesScreen() {
                 <View style={styles.favoriteActions}>
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={() => setEditingId(favorite.id)}
+                    onPress={() => openEditForm(favorite)}
                   >
                     <Edit3 size={16} color={isDark ? '#9ca3af' : '#6b7280'} />
                   </TouchableOpacity>
@@ -281,6 +482,49 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
     fontSize: 16,
     color: isDark ? '#ffffff' : '#1f2937',
     marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: isDark ? '#ffffff' : '#1f2937',
+    marginBottom: 8,
+  },
+  endpointSelector: {
+    marginBottom: 16,
+  },
+  endpointOption: {
+    alignItems: 'center',
+    backgroundColor: isDark ? '#374151' : '#f9fafb',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginRight: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    minWidth: 80,
+  },
+  selectedEndpointOption: {
+    borderColor: '#3b82f6',
+    backgroundColor: isDark ? '#1e3a8a' : '#dbeafe',
+  },
+  endpointIcon: {
+    fontSize: 20,
+    marginBottom: 4,
+  },
+  endpointOptionText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: isDark ? '#9ca3af' : '#6b7280',
+    textAlign: 'center',
+  },
+  selectedEndpointText: {
+    color: isDark ? '#60a5fa' : '#3b82f6',
+  },
+  helpText: {
+    fontSize: 12,
+    color: isDark ? '#9ca3af' : '#6b7280',
+    marginBottom: 16,
+    lineHeight: 16,
   },
   formActions: {
     flexDirection: 'row',
