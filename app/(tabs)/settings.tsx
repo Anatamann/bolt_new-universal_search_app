@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -103,9 +104,11 @@ export default function SettingsScreen() {
 
   const isDark = colorScheme === 'dark';
 
-  useEffect(() => {
-    loadSettings();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadSettings();
+    }, [])
+  );
 
   const loadSettings = async () => {
     try {
