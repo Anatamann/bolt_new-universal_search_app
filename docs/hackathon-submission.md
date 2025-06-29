@@ -13,7 +13,23 @@ This submission demonstrates the extraordinary power of Bolt's AI platform throu
 ## The One-Shot Prompt Challenge
 
 ### Original User Prompt
-*"I want you to build a simple android application whose functionality is similar to the Google search interface present on the home page of many android phones but in this application user can have the options to direct their searches to desired application Like youtube, gpt or simply there filesystems instead of one point of search..."*
+"I want you to build a simple android application whose functionality is similar to the Google search interface present on the home page of many android phones but in this
+application user can have the options to direct their searches to desired application Like youtube, gpt or simply there filesystems instead of one point of search.
+
+The application must have two points of interactions:
+They can do searches directly from the Home Page just Like Google's search bar.
+Application settings to enable the desired end point applications to choose from when doing the search.
+
+The desired result after a user installs the application is:
+A search bar is automatically placed on the users home page tab which should be displaceable as the users desired locations, just like any googles search bar.
+Users can open the application interface to enable the searching end points which will be the installed applications on the device.
+Use Modern UI guidelines to make the application simple to navigate and use. Implement automatic system theme adaptability for better user experience.
+
+Important: If this functionality is unattainable I want you to create end points which will direct the searches on the users default web browsers which will redirect the search content on the selected websites,
+example: If user search for latest Marvel Movie trailer and select Youtube, user should be directed on results page of the youtube.
+If this case is the ideal case for our development then I would like to build an exe application for desktops to have the similar functionality as mentioned in details above.
+
+I hope i'm clear on my intentions, please confirm by summarizing it briefly along with the calculation of tokens that will be utilized for the development of this project on each phase before actually starting the development process."
 
 ### What Makes This One-Shot Remarkable
 
