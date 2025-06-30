@@ -89,7 +89,9 @@ To download and run the production build:
 #### Direct Download
 1. Go to the [Releases](https://github.com/Anatamann/bolt_new-universal_search_app/releases) section
 2. Download the latest release for your platform:
-   - **Android**: [ekagra_search.apk](https://github.com/Anatamann/bolt_new-universal_search_app/releases/download/v1.0.0/ekagra_search.apk)
+   - **Android**:
+      - [ekagra.apk V1.0.0](https://github.com/Anatamann/bolt_new-universal_search_app/releases/download/v1.0.0/ekagra_search.apk)
+      - [ekagra.apk V1.1.0](https://github.com/Anatamann/bolt_new-universal_search_app/releases/download/v1.1.0/ekagraV110.apk)
 
 ## 🛠️ Technology Stack
 
