@@ -13,8 +13,8 @@ const DEFAULT_ENGINES = {
   'reddit': 'https://www.reddit.com/search/?q=%s',
   'x' : 'https://twitter.com/search?q=%s',
   'wiki' : 'https://en.wikipedia.org/w/index.php?search=%s',
-  'stacko' : 'https://stackoverflow.com/search?q=%s',
-  'lkdin' : 'https://www.linkedin.com/search/results/all/?keywords=%s',
+  'stackover' : 'https://stackoverflow.com/search?q=%s',
+  'linkedin' : 'https://www.linkedin.com/search/results/all/?keywords=%s',
   'quora' : 'https://www.quora.com/search?q=%s' ,
   'gpt' : 'https://chatgpt.com/?q=%s'
 };
