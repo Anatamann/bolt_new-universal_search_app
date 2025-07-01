@@ -3,16 +3,76 @@
 <head>
   <title>Universal Search Options</title>
   <style>
-    body { font-family: sans-serif; margin: 2em; }
-    h1, h2 { text-align: center; }
+    :root {
+      --background-color: #ffffff;
+      --text-color: #202124;
+      --secondary-text-color: #5f6368;
+      --primary-button-bg: #4285F4;
+      --primary-button-text: #ffffff;
+      --danger-button-bg: #db4437;
+      --input-border-color: #ccc;
+      --input-bg-color: #ffffff;
+      --list-border-color: #e0e0e0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background-color: #202124;
+        --text-color: #e8eaed;
+        --secondary-text-color: #969ba1;
+        --primary-button-bg: #8ab4f8;
+        --primary-button-text: #202124;
+        --danger-button-bg: #f28b82;
+        --input-border-color: #5f6368;
+        --input-bg-color: #303134;
+        --list-border-color: #3c4043;
+      }
+    }
+
+    body { 
+      font-family: sans-serif; 
+      margin: 2em; 
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+    h1, h2 { 
+      text-align: center; 
+      color: var(--secondary-text-color);
+    }
     .container { max-width: 500px; margin: 0 auto; }
     .form-group { margin-bottom: 1em; }
     label { display: block; margin-bottom: 0.5em; }
-    input { width: 100%; padding: 0.5em; box-sizing: border-box; }
-    button { padding: 0.7em 1.5em; background-color: #4285F4; color: white; border: none; cursor: pointer; }
+    input { 
+      width: 100%; 
+      padding: 0.5em; 
+      box-sizing: border-box;
+      background-color: var(--input-bg-color);
+      border: 1px solid var(--input-border-color);
+      color: var(--text-color);
+    }
+    button { 
+      padding: 0.7em 1.5em; 
+      background-color: var(--primary-button-bg); 
+      color: var(--primary-button-text); 
+      border: none; 
+      cursor: pointer; 
+      border-radius: 4px;
+    }
     ul { list-style: none; padding: 0; }
-    li { display: flex; justify-content: space-between; align-items: center; padding: 0.5em; border-bottom: 1px solid #ccc; }
-    .delete-btn { background-color: #db4437; color: white; border: none; cursor: pointer; padding: 0.3em 0.6em; }
+    li { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 0.5em; 
+      border-bottom: 1px solid var(--list-border-color); 
+    }
+    .delete-btn { 
+      background-color: var(--danger-button-bg); 
+      color: var(--primary-button-text);
+    }
+    #cancel-btn {
+        background-color: var(--secondary-text-color);
+    }
   </style>
 </head>
 <body>
