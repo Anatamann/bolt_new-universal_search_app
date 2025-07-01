@@ -3,6 +3,8 @@
   "name": "Ekagra Search",
   "version": "1.0",
   "description": "Search the internet without any distraction.",
+  "permissions": ["storage"],
+  "options_page": "options.html",
   "background": {
     "service_worker": "background.js"
   },

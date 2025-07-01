@@ -1,32 +1,48 @@
-const SEARCH_ENGINES = {
-  'google': 'https://www.google.com/search?q=',
-  'youtube': 'https://www.youtube.com/results?search_query=',
-  'github': 'https://github.com/search?q=',
-  'reddit': 'https://www.reddit.com/search/?q=',
+let SEARCH_ENGINES = {
+  'google': 'https://www.google.com/search?q=%s',
+  'youtube': 'https://www.youtube.com/results?search_query=%s',
+  'github': 'https://github.com/search?q=%s',
+  'reddit': 'https://www.reddit.com/search/?q=%s',
+  'x' : 'https://twitter.com/search?q=%s',
+  'wiki' : 'https://en.wikipedia.org/w/index.php?search=%s',
+  'stacko' : 'https://stackoverflow.com/search?q=%s',
+  'lkdin' : 'https://www.linkedin.com/search/results/all/?keywords=%s',
+  'quora' : 'https://www.quora.com/search?q=%s' ,
+  'gpt' : 'https://chatgpt.com/?q=%s'
 };
+
+// Load custom engines from storage and merge them with the defaults
+chrome.storage.sync.get('customEngines', (data) => {
+  if (data.customEngines) {
+    SEARCH_ENGINES = { ...SEARCH_ENGINES, ...data.customEngines };
+  }
+});
+
+// Listen for changes in storage and update the engines list
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (changes.customEngines) {
+    chrome.storage.sync.get('customEngines', (data) => {
+        SEARCH_ENGINES = {
+            ...SEARCH_ENGINES,
+            ...data.customEngines
+        };
+    });
+  }
+});
 
 // Listen for when the user types the keyword and presses Enter
 chrome.omnibox.onInputEntered.addListener((text, disposition) => {
-  // text is the full string the user typed after the keyword
-  // disposition is where the user wants to open the results (e.g., 'currentTab', 'newForegroundTab')
-
-  // 1. Parse the user's input
   const [platform, ...queryParts] = text.trim().split(' ');
   const query = queryParts.join(' ');
 
-  // 2. Determine the search engine URL
   let searchUrl = SEARCH_ENGINES['google']; // Default to Google
   if (platform && SEARCH_ENGINES[platform.toLowerCase()]) {
     searchUrl = SEARCH_ENGINES[platform.toLowerCase()];
   }
 
-  // 3. If a platform was specified, use the rest as the query.
-  //    Otherwise, the whole input is the query.
   const finalQuery = query ? query : text;
+  const finalUrl = searchUrl.replace('%s', encodeURIComponent(finalQuery));
 
-  const finalUrl = `${searchUrl}${encodeURIComponent(finalQuery)}`;
-
-  // 4. Open a new tab with the search results
   chrome.tabs.create({ url: finalUrl });
 });
 

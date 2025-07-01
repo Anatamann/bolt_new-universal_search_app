@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Universal Search Options</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    h1, h2 { text-align: center; }
+    .container { max-width: 500px; margin: 0 auto; }
+    .form-group { margin-bottom: 1em; }
+    label { display: block; margin-bottom: 0.5em; }
+    input { width: 100%; padding: 0.5em; box-sizing: border-box; }
+    button { padding: 0.7em 1.5em; background-color: #4285F4; color: white; border: none; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; justify-content: space-between; align-items: center; padding: 0.5em; border-bottom: 1px solid #ccc; }
+    .delete-btn { background-color: #db4437; color: white; border: none; cursor: pointer; padding: 0.3em 0.6em; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Universal Search Settings</h1>
+
+    <h2>Add/Edit Search Engine</h2>
+    <form id="add-engine-form">
+      <input type="hidden" id="original-name">
+      <div class="form-group">
+        <label for="name">Name (Keyword)</label>
+        <input type="text" id="name" placeholder="e.g., duckduckgo" required>
+      </div>
+      <div class="form-group">
+        <label for="url">Search URL (use %s for the query)</label>
+        <input type="text" id="url" placeholder="e.g., https://duckduckgo.com/?q=%s" required>
+      </div>
+      <button type="submit" id="submit-btn">Add Engine</button>
+      <button type="button" id="cancel-btn" style="display:none; background-color: #777; margin-left: 1em;">Cancel</button>
+    </form>
+
+    <h2>Custom Search Engines</h2>
+    <ul id="engines-list"></ul>
+
+    <h2>Default Search Engines</h2>
+    <ul id="default-engines-list"></ul>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

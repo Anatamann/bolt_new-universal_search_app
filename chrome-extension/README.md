@@ -24,6 +24,36 @@ Since this is an unpacked extension, you need to load it manually in developer m
 
 The "Universal Search" extension will now be installed and active.
 
+## ⚙️ Managing Custom Search Engines
+
+This extension allows you to add, edit, and delete your own custom search engines via the options page.
+
+### How to Open the Options Page
+
+1.  Right-click on the Universal Search extension icon in your Chrome toolbar.
+2.  Select **Options** from the context menu.
+
+### Adding a Custom Engine
+
+1.  On the options page, you will see a form titled **"Add/Edit Search Engine"**.
+2.  **Name (Keyword)**: Enter the keyword you want to use for this engine (e.g., `ddg`, `wiki`).
+3.  **Search URL**: Enter the full search URL for the website. **Crucially, use `%s` as a placeholder for where the search query should go.**
+    *   *Example for DuckDuckGo*: `https://duckduckgo.com/?q=%s`
+    *   *Example for Wikipedia*: `https://en.wikipedia.org/w/index.php?search=%s`
+4.  Click the **Add Engine** button. Your new engine will appear in the "Custom Search Engines" list.
+
+### Editing an Engine
+
+1.  In the "Custom Search Engines" list, find the engine you want to modify.
+2.  Click the **Edit** button next to it.
+3.  The form will be populated with the engine's current details.
+4.  Make your changes and click the **Update Engine** button.
+
+### Deleting an Engine
+
+1.  In the list, find the engine you want to remove.
+2.  Click the **Delete** button next to it. The engine will be removed immediately.
+
 ## 📖 How to Use
 
 To use the extension, follow these steps:
