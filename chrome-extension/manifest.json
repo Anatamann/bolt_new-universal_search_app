@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Ekagra Search",
+  "version": "1.0",
+  "description": "Search the internet without any distraction.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "omnibox": {
+    "keyword": "ek"
+  },
+  "icons": {
+    "16": "images/icon.svg",
+    "48": "images/icon.svg",
+    "128": "images/icon.svg"
+  }
+}
