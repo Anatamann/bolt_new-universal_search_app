@@ -21,6 +21,8 @@ Universal Search is a powerful mobile application that revolutionizes how you se
 
 Think of it as your **personal search command center** - one search bar that can direct your queries to Google, YouTube, GitHub, Reddit, or any custom platform you choose.
 
+[Watch the Demo](https://vimeo.com/1097502793?p=0s)
+
 ## ✨ Key Features
 
 ### 🔍 **Unified Search Interface**
